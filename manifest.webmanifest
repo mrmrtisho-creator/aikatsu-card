@@ -1,0 +1,26 @@
+{
+  "name": "アイカツ！アンコール カードコレクション",
+  "short_name": "アイカツ！カード",
+  "description": "アイカツ！アンコールのカードを管理するコレクションアプリ",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff8fd",
+  "theme_color": "#ff75b8",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

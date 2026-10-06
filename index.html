@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ff78b6">
+<title>アイカツ！アンコール カードコレクション</title>
+
+<style>
+:root{
+ --pink:#ff75b8;--pink2:#ffb9dc;--lav:#9b8cff;--blue:#79cfff;
+ --cream:#fffaff;--ink:#49394d;--muted:#9b879b;--line:#f1d9e9;
+ --shadow:0 10px 30px rgba(142,79,129,.13);--gold:#ffc95c;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP","Yu Gothic",sans-serif;
+ background:
+ radial-gradient(circle at 5% 8%,#ffe3f2 0 90px,transparent 91px),
+ radial-gradient(circle at 96% 18%,#e8e4ff 0 125px,transparent 126px),
+ linear-gradient(180deg,#fff8fd 0%,#fff 48%,#fff7fb 100%);
+ min-height:100vh}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{max-width:1100px;margin:auto;padding:12px 14px 88px}
+.hero{position:relative;overflow:hidden;border:1px solid #f2d7e7;border-radius:30px;
+ padding:25px 20px 24px;background:linear-gradient(135deg,#fff 0%,#fff0f8 55%,#f0edff 100%);
+ box-shadow:var(--shadow)}
+.hero:before{content:"✦  ✧  ✦  ✧";position:absolute;right:13px;top:12px;color:#ffabd1;font-size:20px;letter-spacing:7px}
+.hero:after{content:"♡";position:absolute;right:25px;bottom:-30px;color:#ffffffaa;font-size:150px}
+.hero h1{position:relative;margin:0;font-size:clamp(24px,7vw,40px);line-height:1.12;letter-spacing:.03em}
+.hero h1 span{display:inline-block;color:var(--pink)}
+.hero p{position:relative;margin:9px 0 0;color:var(--muted);font-size:12px;font-weight:600}
+.sparkle{position:absolute;left:16px;bottom:11px;color:#d8a6ff;font-size:15px}
+.tabs{display:flex;gap:8px;margin:12px 0;padding:4px 0;position:sticky;top:0;z-index:20;
+ background:#fff8fddd;backdrop-filter:blur(12px);overflow:auto}
+.tab{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 15px;color:var(--muted);font-weight:700}
+.tab.active{background:linear-gradient(135deg,var(--pink),#ff92c6);border-color:var(--pink);color:#fff;box-shadow:0 5px 14px #ff75b844}
+.view{display:none}.view.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:11px 0}
+.stat{background:#fff;border:1px solid var(--line);border-radius:19px;padding:13px;box-shadow:var(--shadow)}
+.stat small{display:block;color:var(--muted);font-size:10px}.stat strong{font-size:24px}
+.progress{height:8px;border-radius:99px;background:#f3e5ee;overflow:hidden;margin-top:7px}
+.progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--lav),var(--blue));width:0;border-radius:99px}
+.panel{background:#ffffffee;border:1px solid var(--line);border-radius:20px;padding:13px;box-shadow:var(--shadow);margin:11px 0}
+.filters{display:grid;grid-template-columns:2fr repeat(4,1fr) auto;gap:7px}
+input,select,textarea{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;color:var(--ink);outline:none}
+input:focus,select:focus,textarea:focus{border-color:#e19bc1;box-shadow:0 0 0 3px #ffe8f3}
+.btn{border:0;border-radius:12px;padding:9px 12px;background:#f4eaf2;color:var(--ink);font-weight:800}
+.btn.primary{background:linear-gradient(135deg,var(--pink),#ff9ccc);color:#fff}
+.btn.ghost{background:#fff;border:1px solid var(--line)}
+.btn.danger{background:#fff0f2;color:#c64e72}
+.cardgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:19px;overflow:hidden;position:relative;box-shadow:var(--shadow);transition:.18s}
+.card:hover{transform:translateY(-3px)}
+.card.unowned{opacity:.58;filter:saturate(.65)}
+.cardimg{aspect-ratio:3/4;background:linear-gradient(145deg,#fff0f7,#eeeaff);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.cardimg:after{content:"✦";position:absolute;right:7px;bottom:5px;color:#fff8;font-size:25px;pointer-events:none}
+.cardimg img{width:100%;height:100%;object-fit:cover}
+.cardimg .fallback{font-size:19px;font-weight:900;color:#c5a8ba}
+.badge{position:absolute;left:7px;top:7px;border-radius:999px;padding:4px 7px;background:#ffffffdf;font-size:10px;font-weight:900;backdrop-filter:blur(5px)}
+.ownedmark{position:absolute;right:7px;top:7px;background:linear-gradient(135deg,var(--pink),var(--lav));color:#fff;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:900;box-shadow:0 3px 9px #a15b9270}
+.cardbody{padding:10px}
+.cid{font-weight:900;font-size:13px}.rline{display:flex;justify-content:space-between;align-items:center;gap:4px}
+.rarity{font-size:10px;color:#a06d8d}.qty{font-size:11px;color:var(--muted)}
+.actions{display:flex;gap:5px;margin-top:7px}.actions button{flex:1;padding:7px 3px;font-size:11px}
+.empty{padding:35px;text-align:center;color:var(--muted)}
+.modal{position:fixed;inset:0;background:#2a17308c;display:none;align-items:center;justify-content:center;padding:15px;z-index:100}
+.modal.show{display:flex}.modalbox{width:min(560px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:25px;padding:17px;box-shadow:0 25px 70px #24162466}
+.modalhead{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#f5eaf2;border-radius:50%;width:36px;height:36px}
+.detail{display:grid;grid-template-columns:180px 1fr;gap:16px;margin-top:10px}.detail img{width:100%;border-radius:15px}
+.formrow{display:grid;gap:5px;margin-bottom:9px}.check{display:flex;align-items:center;gap:8px}
+.aboutgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tip{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px}
+.install{display:none;margin:10px 0;background:linear-gradient(135deg,#fff0f7,#f0edff);border:1px solid var(--line);border-radius:18px;padding:12px}
+.install.show{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.install b{font-size:13px}.install span{font-size:11px;color:var(--muted)}
+.bottomnav{display:none}
+@media(max-width:900px){.cardgrid{grid-template-columns:repeat(4,1fr)}.filters{grid-template-columns:1fr 1fr 1fr}.filters input{grid-column:1/-1}}
+@media(max-width:620px){
+ .app{padding:9px 9px 80px}.hero{border-radius:25px;padding:22px 16px}.stats{grid-template-columns:repeat(2,1fr)}
+ .cardgrid{grid-template-columns:repeat(3,1fr);gap:7px}.detail{grid-template-columns:115px 1fr}.aboutgrid{grid-template-columns:1fr}
+ .tabs{display:none}.bottomnav{display:flex;position:fixed;left:9px;right:9px;bottom:9px;z-index:50;background:#ffffffec;backdrop-filter:blur(14px);
+ border:1px solid var(--line);border-radius:20px;padding:6px;box-shadow:0 10px 35px #7345672b;gap:5px}
+ .bottomnav button{flex:1;border:0;background:transparent;border-radius:14px;padding:7px 2px;color:var(--muted);font-size:10px;font-weight:800}
+ .bottomnav button.active{background:#ffe5f2;color:#d65091}
+}
+@media(max-width:390px){.cardgrid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.detail{grid-template-columns:100px 1fr}}
+</style>
+
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="アイカツ！アンコール">
+<link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+<div class="app">
+<header class="hero">
+  <h1>アイカツ！アンコール<br><span>CARD COLLECTION</span></h1>
+  <p>♡ わたしだけのカードコレクション ♡</p>
+  <div class="sparkle">✦ ✧ ✦</div>
+</header>
+<div class="install" id="installBox">
+  <div><b>ホーム画面に追加できます ✨</b><br><span>アプリみたいにすぐ開けます</span></div>
+  <button class="btn primary" id="installBtn">追加</button>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-view="collection">カード一覧</button>
+  <button class="tab" data-view="dashboard">コレクション状況</button>
+  <button class="tab" data-view="data">データ管理</button>
+</div>
+
+<section id="collection" class="view active">
+  <div class="stats" id="stats"></div>
+  <div class="panel">
+    <div class="filters">
+      <input id="search" placeholder="カード番号・メモを検索…">
+      <select id="rarity"><option value="">レアリティ：すべて</option><option>PR</option><option>R</option><option>N</option><option>ER</option></select>
+      <select id="status"><option value="">所持状況：すべて</option><option value="owned">所持</option><option value="unowned">未所持</option></select>
+      <select id="sort"><option value="num">番号順</option><option value="rarity">レアリティ順</option><option value="owned">所持→未所持</option></select>
+      <select id="qtyfilter"><option value="">枚数：すべて</option><option value="1">1枚以上</option><option value="2">2枚以上</option><option value="3">3枚以上</option></select>
+      <button class="btn ghost" id="reset">リセット</button>
+    </div>
+  </div>
+  <div id="grid" class="cardgrid"></div>
+</section>
+
+<section id="dashboard" class="view">
+  <div class="panel">
+    <h2>コレクション状況</h2>
+    <div id="dash"></div>
+  </div>
+  <div class="aboutgrid">
+    <div class="tip"><b>使い方</b><p>カードの「＋」を押すと所持枚数が増えます。カードをタップすると、メモやお気に入りも登録できます。</p></div>
+    <div class="tip"><b>データについて</b><p>データはこの端末のブラウザ内に保存されます。機種変更前などは「データ管理」からバックアップしてください。</p></div>
+  </div>
+</section>
+
+<section id="data" class="view">
+  <div class="panel">
+    <h2>データ管理</h2>
+    <p>所持枚数・メモ・お気に入りなどをJSON形式で保存できます。</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn primary" id="export">バックアップを書き出す</button>
+      <label class="btn ghost">バックアップを読み込む<input id="import" type="file" accept=".json" hidden></label>
+      <button class="btn danger" id="clear">所持データを初期化</button>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>現在の仕様</h3>
+    <ul>
+      <li>アイカツ！アンコール 1弾：85カードを初期登録</li>
+      <li>カード画像：公式カードリストの画像を参照</li>
+      <li>所持枚数・お気に入り・メモを端末内に保存</li>
+      <li>検索／レアリティ／所持状況／枚数で絞り込み</li>
+      <li>スマートフォン・PC対応＋PWA（ホーム画面追加）</li>
+    </ul>
+  </div>
+  <div class="panel">
+    <b>公式カードリスト</b><br>
+    <a href="https://dcd.aikatsu.com/encore/cardlist/" target="_blank" rel="noopener">データカードダス「アイカツ！アンコール」公式カードリスト ↗</a>
+  </div>
+</section>
+</div>
+<nav class="bottomnav">
+  <button class="bn active" data-view="collection">🃏<br>カード</button>
+  <button class="bn" data-view="dashboard">💖<br>コレクション</button>
+  <button class="bn" data-view="data">⚙️<br>設定</button>
+</nav>
+
+<div class="modal" id="modal">
+  <div class="modalbox">
+    <div class="modalhead"><h2 id="modalTitle">カード詳細</h2><button class="close" id="close">×</button></div>
+    <div class="detail">
+      <img id="modalImg" alt="">
+      <div>
+        <div class="formrow"><label>カード番号</label><input id="mId" readonly></div>
+        <div class="formrow"><label>レアリティ</label><input id="mRarity" readonly></div>
+        <div class="formrow"><label>所持枚数</label><input id="mQty" type="number" min="0" max="999"></div>
+        <label class="check"><input id="mFav" type="checkbox"> お気に入りにする</label>
+        <div class="formrow" style="margin-top:12px"><label>メモ</label><textarea id="mMemo" rows="4" placeholder="入手場所、交換予定、状態など"></textarea></div>
+        <button class="btn primary" id="save" style="width:100%">保存する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CARDS = [{"id": "E1-01", "rarity": "PR"}, {"id": "E1-02", "rarity": "PR"}, {"id": "E1-03", "rarity": "PR"}, {"id": "E1-04", "rarity": "PR"}, {"id": "E1-05", "rarity": "R"}, {"id": "E1-06", "rarity": "R"}, {"id": "E1-07", "rarity": "R"}, {"id": "E1-08", "rarity": "R"}, {"id": "E1-09", "rarity": "R"}, {"id": "E1-10", "rarity": "R"}, {"id": "E1-11", "rarity": "R"}, {"id": "E1-12", "rarity": "R"}, {"id": "E1-13", "rarity": "R"}, {"id": "E1-14", "rarity": "R"}, {"id": "E1-15", "rarity": "R"}, {"id": "E1-16", "rarity": "R"}, {"id": "E1-17", "rarity": "R"}, {"id": "E1-18", "rarity": "R"}, {"id": "E1-19", "rarity": "R"}, {"id": "E1-20", "rarity": "R"}, {"id": "E1-21", "rarity": "N"}, {"id": "E1-22", "rarity": "N"}, {"id": "E1-23", "rarity": "N"}, {"id": "E1-24", "rarity": "N"}, {"id": "E1-25", "rarity": "N"}, {"id": "E1-26", "rarity": "N"}, {"id": "E1-27", "rarity": "N"}, {"id": "E1-28", "rarity": "N"}, {"id": "E1-29", "rarity": "N"}, {"id": "E1-30", "rarity": "ER"}, {"id": "E1-31", "rarity": "ER"}, {"id": "E1-32", "rarity": "ER"}, {"id": "E1-33", "rarity": "PR"}, {"id": "E1-34", "rarity": "PR"}, {"id": "E1-35", "rarity": "PR"}, {"id": "E1-36", "rarity": "PR"}, {"id": "E1-37", "rarity": "R"}, {"id": "E1-38", "rarity": "R"}, {"id": "E1-39", "rarity": "R"}, {"id": "E1-40", "rarity": "R"}, {"id": "E1-41", "rarity": "N"}, {"id": "E1-42", "rarity": "N"}, {"id": "E1-43", "rarity": "N"}, {"id": "E1-44", "rarity": "N"}, {"id": "E1-45", "rarity": "N"}, {"id": "E1-46", "rarity": "N"}, {"id": "E1-47", "rarity": "N"}, {"id": "E1-48", "rarity": "N"}, {"id": "E1-49", "rarity": "N"}, {"id": "E1-50", "rarity": "ER"}, {"id": "E1-51", "rarity": "PR"}, {"id": "E1-52", "rarity": "PR"}, {"id": "E1-53", "rarity": "R"}, {"id": "E1-54", "rarity": "R"}, {"id": "E1-55", "rarity": "R"}, {"id": "E1-56", "rarity": "R"}, {"id": "E1-57", "rarity": "R"}, {"id": "E1-58", "rarity": "R"}, {"id": "E1-59", "rarity": "R"}, {"id": "E1-60", "rarity": "N"}, {"id": "E1-61", "rarity": "N"}, {"id": "E1-62", "rarity": "N"}, {"id": "E1-63", "rarity": "N"}, {"id": "E1-64", "rarity": "N"}, {"id": "E1-65", "rarity": "N"}, {"id": "E1-66", "rarity": "N"}, {"id": "E1-67", "rarity": "N"}, {"id": "E1-68", "rarity": "N"}, {"id": "E1-69", "rarity": "N"}, {"id": "E1-70", "rarity": "N"}, {"id": "E1-71", "rarity": "PR"}, {"id": "E1-72", "rarity": "PR"}, {"id": "E1-73", "rarity": "PR"}, {"id": "E1-74", "rarity": "PR"}, {"id": "E1-75", "rarity": "PR"}, {"id": "E1-76", "rarity": "PR"}, {"id": "E1-77", "rarity": "PR"}, {"id": "E1-78", "rarity": "PR"}, {"id": "E1-79", "rarity": "PR"}, {"id": "E1-80", "rarity": "PR"}, {"id": "E1-81", "rarity": "PR"}, {"id": "E1-82", "rarity": "PR"}, {"id": "E1-83", "rarity": "N"}, {"id": "E1-84", "rarity": "N"}, {"id": "E1-85", "rarity": "N"}];
+const IMG = id => `https://dcd.aikatsu.com/encore/images/cardlist/card/${id}_${CARDS.find(x=>x.id===id).rarity}.webp`;
+const KEY = "aikatsuEncoreCollection_v1";
+let state = JSON.parse(localStorage.getItem(KEY) || "{}");
+let currentId = null;
+
+function getData(id){ return state[id] || {qty:0,fav:false,memo:""}; }
+function saveState(){localStorage.setItem(KEY,JSON.stringify(state)); render();}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
+
+function renderStats(){
+  const owned=CARDS.filter(c=>getData(c.id).qty>0).length;
+  const totalQty=CARDS.reduce((a,c)=>a+getData(c.id).qty,0);
+  const fav=CARDS.filter(c=>getData(c.id).fav).length;
+  const pct=Math.round(owned/CARDS.length*100);
+  document.getElementById("stats").innerHTML=`
+    <div class="stat"><small>コンプリート率</small><strong>${pct}%</strong><div class="progress"><i style="width:${pct}%"></i></div></div>
+    <div class="stat"><small>所持カード</small><strong>${owned}<small style="display:inline;font-size:13px"> / ${CARDS.length}</small></strong></div>
+    <div class="stat"><small>総所持枚数</small><strong>${totalQty}</strong></div>
+    <div class="stat"><small>お気に入り</small><strong>♡ ${fav}</strong></div>`;
+}
+function render(){
+  renderStats();
+  const q=document.getElementById("search").value.trim().toLowerCase();
+  const r=document.getElementById("rarity").value;
+  const st=document.getElementById("status").value;
+  const sort=document.getElementById("sort").value;
+  const qf=document.getElementById("qtyfilter").value;
+  let list=CARDS.filter(c=>{
+    const d=getData(c.id);
+    const text=(c.id+" "+d.memo).toLowerCase();
+    return (!q||text.includes(q))&&(!r||c.rarity===r)&&(!st||(st==="owned"?d.qty>0:d.qty===0))&&(!qf||d.qty>=Number(qf));
+  });
+  const rank={ER:0,PR:1,R:2,N:3};
+  list.sort((a,b)=>{
+    if(sort==="rarity") return rank[a.rarity]-rank[b.rarity] || a.id.localeCompare(b.id);
+    if(sort==="owned") return getData(b.id).qty-getData(a.id).qty || a.id.localeCompare(b.id);
+    return a.id.localeCompare(b.id,undefined,{numeric:true});
+  });
+  document.getElementById("grid").innerHTML=list.length?list.map(c=>{
+    const d=getData(c.id);
+    return `<article class="card ${d.qty?"":"unowned"}">
+      <div class="cardimg" onclick="openModal('${c.id}')">
+        <img src="${IMG(c.id)}" alt="${c.id}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="fallback" style="display:none">${c.id}</div>
+        <span class="badge">${c.rarity}</span>${d.qty?`<span class="ownedmark">✓</span>`:""}
+      </div>
+      <div class="cardbody">
+        <div class="rline"><span class="cid">${c.id}</span><span class="rarity">${d.fav?"♥ ":""}${c.rarity}</span></div>
+        <div class="rline"><span class="qty">所持：${d.qty}枚</span></div>
+        <div class="actions">
+          <button class="btn" onclick="changeQty('${c.id}',-1)">−</button>
+          <button class="btn primary" onclick="changeQty('${c.id}',1)">＋</button>
+          <button class="btn ghost" onclick="openModal('${c.id}')">詳細</button>
+        </div>
+      </div>
+    </article>`;
+  }).join(""):`<div class="empty" style="grid-column:1/-1">条件に一致するカードがありません。</div>`;
+  renderDash();
+}
+function changeQty(id,n){const d=getData(id);d.qty=Math.max(0,Math.min(999,d.qty+n));state[id]=d;saveState();}
+function openModal(id){
+  currentId=id;const c=CARDS.find(x=>x.id===id),d=getData(id);
+  document.getElementById("modalTitle").textContent=id;
+  document.getElementById("modalImg").src=IMG(id);
+  document.getElementById("mId").value=id;document.getElementById("mRarity").value=c.rarity;
+  document.getElementById("mQty").value=d.qty;document.getElementById("mFav").checked=d.fav;document.getElementById("mMemo").value=d.memo;
+  document.getElementById("modal").classList.add("show");
+}
+function closeModal(){document.getElementById("modal").classList.remove("show")}
+function renderDash(){
+  const owned=CARDS.filter(c=>getData(c.id).qty>0).length;
+  const by=["ER","PR","R","N"].map(r=>{
+    const all=CARDS.filter(c=>c.rarity===r),o=all.filter(c=>getData(c.id).qty>0).length,p=all.length?Math.round(o/all.length*100):0;
+    return `<div style="margin:14px 0"><div style="display:flex;justify-content:space-between"><b>${r}</b><span>${o}/${all.length}（${p}%）</span></div><div class="progress"><i style="width:${p}%"></i></div></div>`;
+  }).join("");
+  document.getElementById("dash").innerHTML=`<h3>全体：${owned}/${CARDS.length}枚（${Math.round(owned/CARDS.length*100)}%）</h3>${by}`;
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));document.getElementById(b.dataset.view).classList.add("active");
+});
+["search","rarity","status","sort","qtyfilter"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+document.getElementById("reset").onclick=()=>{["search","rarity","status","qtyfilter"].forEach(id=>document.getElementById(id).value="");document.getElementById("sort").value="num";render()};
+document.getElementById("close").onclick=closeModal;
+document.getElementById("modal").onclick=e=>{if(e.target.id==="modal")closeModal()};
+document.getElementById("save").onclick=()=>{
+ const d=getData(currentId);d.qty=Math.max(0,Number(document.getElementById("mQty").value)||0);d.fav=document.getElementById("mFav").checked;d.memo=document.getElementById("mMemo").value;state[currentId]=d;saveState();closeModal();
+};
+document.getElementById("export").onclick=()=>{
+ const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),data:state},null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="aikatsu-encore-backup.json";a.click();URL.revokeObjectURL(a.href);
+};
+document.getElementById("import").onchange=e=>{
+ const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+ rd.onload=()=>{try{const x=JSON.parse(rd.result);state=x.data||x;saveState();alert("バックアップを読み込みました。")}catch{alert("読み込みに失敗しました。")}};
+ rd.readAsText(f);e.target.value="";
+};
+document.getElementById("clear").onclick=()=>{
+ if(confirm("所持枚数・お気に入り・メモをすべて初期化します。よろしいですか？")){state={};saveState();}
+};
+
+// PWA: install prompt
+let deferredPrompt;
+const installBox=document.getElementById("installBox"),installBtn=document.getElementById("installBtn");
+window.addEventListener("beforeinstallprompt",e=>{
+ e.preventDefault(); deferredPrompt=e; if(installBox) installBox.classList.add("show");
+});
+if(installBtn) installBtn.onclick=async()=>{
+ if(!deferredPrompt)return;
+ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; installBox.classList.remove("show");
+};
+window.addEventListener("appinstalled",()=>installBox&&installBox.classList.remove("show"));
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}
+
+// Mobile bottom navigation mirrors the top tabs.
+document.querySelectorAll(".bn").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".bn").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.view===b.dataset.view));
+ document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
+ document.getElementById(b.dataset.view).classList.add("active");
+ window.scrollTo({top:0,behavior:"smooth"});
+});
+
+render();
+</script>
+</body>
+</html>
